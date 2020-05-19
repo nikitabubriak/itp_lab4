@@ -8,13 +8,6 @@
 
 class BMP 
 {
-	struct Pixel
-	{
-		int8_t r;
-		int8_t g;
-		int8_t b;
-	};
-
 	struct Header
 	{
 		int8_t id[2];            // Завжди дві літери 'B' і 'M'
@@ -34,9 +27,25 @@ class BMP
 		int32_t biClrImportant;  // Те саме
 	};
 
+	struct Pixel
+	{
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+	};
+
+	Header header;
+	Pixel *pixel = new Pixel[header.width*header.depth];
+	
+
+
+	////////////!!!!!!!!!!!! 
+	(use in copy function etc)(takes the value of obj header width attribute, defined in read_header memthod>) this->header.width
+
 public:
 
-	void foo();
+	void read_header(istream&);
+	void read_pixels(istream&);
 
 };
 

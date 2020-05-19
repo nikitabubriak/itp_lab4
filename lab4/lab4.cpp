@@ -14,5 +14,14 @@ int main(int argc, char* argv[])
 
 	double multiplier = stod(argv[3]);
 
+	ifstream infile(argv[1], ios::binary);
+	ofstream outfile(argv[2], ios::binary);
+
+	BMP bitmap;
+
+	bitmap.read_header(infile);
+	bitmap.read_pixels(infile);
+
+
 	return 0;
 }
