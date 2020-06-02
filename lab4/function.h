@@ -6,13 +6,13 @@
 
 using namespace std;
 
-
+const int SIZE = 8847360; // 4K UHD
 
 class BMP 
 {
+
 	class Header
 	{
-	//public:
 		int8_t id1;              // Завжди дві літери 'B' і 'M'
 		int8_t id2;              // Завжди дві літери 'B' і 'M'
 		int32_t filesize;        // Розмір файла в байтах
@@ -56,30 +56,13 @@ class BMP
 		
 		friend class BMP;
 	};
-	
-	//Header read_header(istream&);
-	//Header header = read_header();
-	//void read_pixels(istream&);
-
 
 public:
 
-	//Header header_in;
-
-	Pixel *pixels_in = new Pixel[4225];
+	Pixel *pixels_in = new Pixel[SIZE];
 
 	void input_data(string);
 	void increase_scale(string, int);
-
-
-
-	//Pixel *pixels_in = new Pixel[header_in.get_pixels_number()];
-	//Header header_out;
-	//ofstream outfile("output.bmp", ios::binary);//argv[2], ios::binary);
-	//istream stream();
-	//Header header;
-	//Pixel *pixel = new Pixel[header.width*header.depth];
-	//void read(istream&);
 
 }bitmap;
 
