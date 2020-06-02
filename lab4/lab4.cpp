@@ -20,13 +20,17 @@ lab4.exe input.bmp output.bmp 3
 	*/
 
 	//^^^^^^^^^^^^^^^^^^^^^^^^^
+
+	//<TEMP>
 	string argv1 = "input.bmp";
 	string argv2 = "output.bmp";
 
-	string argv3 = "3";
-	double multiplier = stod(argv3);//argv[3]);
+	string argv3 = "7";
+	int multiplier = stoi(argv3);//argv[3]);
+	cout << "argv[1]= " << argv1 << "\nargv[2]= " << argv2 << "\nargv[3]= " << argv3 << "\n\n";
+	//</TEMP>
 
-	BMP bitmap;
+	//BMP bitmap;
 	
 	bitmap.input_data(argv1);
 	bitmap.increase_scale(argv2, multiplier);

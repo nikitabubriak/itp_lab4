@@ -77,6 +77,8 @@ int BMP::Header::get_depth()
 	return this->depth;
 }
 
+
+
 BMP::Header BMP::Header::read_header(istream &infile)
 {
 	//bitmap.Header header;
@@ -104,6 +106,37 @@ BMP::Header BMP::Header::read_header(istream &infile)
 	//cout << this->id1<< this->filesize << this->width << "\t" << this->depth << endl;
 	//cout << header.id1 << "\t" << header.width << "\t" << header.depth << endl;
 	return header;
+}
+
+
+
+void BMP::Header::write_header(ostream& outfile)
+{
+	//bitmap.Header header;
+	//eader header;
+	//cout << "\nreading header\n";
+	//&this->
+	outfile.write((char*)&this->id1,			sizeof(int8_t));
+	outfile.write((char*)&this->id2,			sizeof(int8_t));
+	outfile.write((char*)&this->filesize,		sizeof(int32_t));
+	outfile.write((char*)&this->reserved1,		sizeof(int16_t));
+	outfile.write((char*)&this->reserved2,		sizeof(int16_t));
+	outfile.write((char*)&this->headersize,		sizeof(int32_t));
+	outfile.write((char*)&this->infoSize,		sizeof(int32_t));
+	outfile.write((char*)&this->width,			sizeof(int32_t));
+	outfile.write((char*)&this->depth,			sizeof(int32_t));
+	outfile.write((char*)&this->biPlanes,		sizeof(int16_t));
+	outfile.write((char*)&this->bits,			sizeof(int16_t));
+	outfile.write((char*)&this->biCompression,	sizeof(int32_t));
+	outfile.write((char*)&this->biSizeImage,	sizeof(int32_t));
+	outfile.write((char*)&this->biXPelsPerMeter,sizeof(int32_t));
+	outfile.write((char*)&this->biYPelsPerMeter,sizeof(int32_t));
+	outfile.write((char*)&this->biClrUsed,		sizeof(int32_t));
+	outfile.write((char*)&this->biClrImportant, sizeof(int32_t));
+
+	//cout << this->id1<< this->filesize << this->width << "\t" << this->depth << endl;
+	//cout << header.id1 << "\t" << header.width << "\t" << header.depth << endl;
+	//return header;
 }
 
 
@@ -137,29 +170,26 @@ void BMP::Pixel::read_pixels(istream &infile, Pixel *pixel, int w, int d)
 	//return pixel;
 }
 
-void BMP::increase_scale(string output, double n)
+void BMP::increase_scale(string output, int n)
 {
 	//Pixel *pixels_out = new Pixel[header_in.get_pixels_number()*n*n];
 
 	ofstream outfile(output, ios::binary);//argv[2], ios::binary);
 	if (!outfile.is_open()) { cout << "Error. Cannot open output file\n"; }
 
+	cout << "Enlarging image " << n << " times...";
+
 	int w = header_in.get_width();
 	int d = header_in.get_depth();
 
-	int _n = 3;//
+	int _n = n;
 	int8_t padding = 0x00;
 
-	int w_out = w * _n;
-	int d_out = d * _n;
-	int filesize_out = header_in.get_headersize() + w_out + d_out;
+	int32_t w_out = w * _n;
+	int32_t d_out = d * _n;
+	int32_t filesize_out = header_in.get_headersize() + w_out + d_out;
 
-	//header_out = header_in;
-	//header_out.headersize
-	
-
-	//int w_out = header_in.get_width()*n;
-	//int d_out = header_in.get_depth()*n;
+	header_in.write_header(outfile);
 
 	for (int i = 0; i < d; i++) // 65 different 3-rows in depth
 	{
@@ -171,21 +201,25 @@ void BMP::increase_scale(string output, double n)
 				{
 					//pixels_out[];
 					//pixels_in[];
-					outfile.write((char*)pixels_in[(i*d) + j].r, sizeof(int8_t));
-					outfile.write((char*)pixels_in[(i*d) + j].g, sizeof(int8_t));
-					outfile.write((char*)pixels_in[(i*d) + j].b, sizeof(int8_t));
+					outfile.write((char*)&pixels_in[(i*d) + j].r, sizeof(uint8_t));
+					outfile.write((char*)&pixels_in[(i*d) + j].g, sizeof(uint8_t));
+					outfile.write((char*)&pixels_in[(i*d) + j].b, sizeof(uint8_t));
 				}
 
 				if (j == w - 1 && (w * _n * 3) % 4 != 0)
 				{
 					for (int i = 0; i < 4 - (w * _n * 3) % 4; i++)
 					{
-						outfile.write((char*)&padding, sizeof(int8_t));
+						outfile.write((char*)&padding, sizeof(uint8_t));
 					}
 				}
 			}
 		}
 	}
+
+	//cout << "\nerror here\n";
+
+	
 
 	outfile.seekp(2, ios::beg);
 	outfile.write((char*)&filesize_out, sizeof(int32_t));
@@ -197,4 +231,7 @@ void BMP::increase_scale(string output, double n)
 	outfile.write((char*)&d_out, sizeof(int32_t));
 
 	outfile.close();
+
+	cout << "Done." << endl;
+	cout << "Written result to " << output << endl;
 }

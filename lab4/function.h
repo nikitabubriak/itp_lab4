@@ -12,6 +12,7 @@ class BMP
 {
 	class Header
 	{
+	//public:
 		int8_t id1;              // Завжди дві літери 'B' і 'M'
 		int8_t id2;              // Завжди дві літери 'B' і 'M'
 		int32_t filesize;        // Розмір файла в байтах
@@ -33,12 +34,13 @@ class BMP
 	public:
 
 		Header read_header(istream&);
+		void write_header(ostream&);
 		int get_pixels_number();
 		int get_headersize();
 		int get_width();
 		int get_depth();
 		
-	};
+	}header_in;
 
 	class Pixel
 	{
@@ -62,12 +64,12 @@ class BMP
 
 public:
 
-	Header header_in;
+	//Header header_in;
 
 	Pixel *pixels_in = new Pixel[4225];
 
 	void input_data(string);
-	void increase_scale(string, double);
+	void increase_scale(string, int);
 
 
 
@@ -79,7 +81,7 @@ public:
 	//Pixel *pixel = new Pixel[header.width*header.depth];
 	//void read(istream&);
 
-};
+}bitmap;
 
 
 
